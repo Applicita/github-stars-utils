@@ -6,6 +6,7 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using CsvHelper.TypeConversion;
 
+namespace GitHubStarredRepoExporter;
 
 internal class Program
 {
