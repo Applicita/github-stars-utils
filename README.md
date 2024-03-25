@@ -1,2 +1,2 @@
 gituhb-stars-utils
-A repository for managing my github stars and lists using DotNet
+A repository for managing github stars and lists using DotNet
