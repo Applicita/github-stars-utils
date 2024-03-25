@@ -5,12 +5,14 @@ using System.Net.Http.Json;
 using CsvHelper;
 using CsvHelper.Configuration;
 using CsvHelper.TypeConversion;
+using GitHubStarredCommon;
 
 namespace GitHubStarredRepoExporter;
 
 internal class Program
 {
     static readonly HttpClient client = new HttpClient();
+
     private static async Task Main(string[] args)
     {
         Console.WriteLine("Starting GitHub Starred Repositories Exporter...");
@@ -29,26 +31,29 @@ internal class Program
             var repositories = await GetStarredRepositories();
 
 
-            await ExportToCsv(repositories,filename);
+            await ExportToCsv(repositories, filename);
 
             Console.WriteLine("Export complete. Check the starred_repos.csv file.");
+            
+            Console.WriteLine("Press any key to exit.");
+            Console.ReadKey();
         }
         catch (Exception e)
         {
             Console.WriteLine(e.Message);
         }
-     
+
     }
 
-    private static async Task ExportToCsv(List<GitHubRepo> repositories,string fileName)
+    private static async Task ExportToCsv(List<GitHubRepo> repositories, string fileName)
     {
         var downloadsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        
+
         if (!Directory.Exists(downloadsPath))
         {
             Directory.CreateDirectory(downloadsPath);
         }
-        
+
         var filePath = Path.Combine(downloadsPath, fileName);
 
         await using (var writer = new StreamWriter(filePath))
@@ -60,25 +65,10 @@ internal class Program
 
         Console.WriteLine($"CSV was created at {filePath}");
 
-        Console.WriteLine("Press any key to exit.");
-        Console.ReadKey();
+      
     }
 
-    public sealed class GitHubRepoMap : ClassMap<GitHubRepo>
-    {
-        public GitHubRepoMap()
-        {
-            AutoMap(CultureInfo.InvariantCulture);
-            Map(m => m.Topics).TypeConverter<SemicolonListConverter>();
-        }
-    }
-    public class SemicolonListConverter : DefaultTypeConverter
-    {
-        public override string ConvertToString(object value, IWriterRow row, MemberMapData memberMapData)
-        {
-            return value is List<string> list ? string.Join(";", list) : "";
-        }
-    }
+
 
 
     private static async Task<List<GitHubRepo>> GetStarredRepositories()
@@ -100,17 +90,19 @@ internal class Program
             {
                 Console.WriteLine("Rate Limit: " + response.Headers.GetValues("X-RateLimit-Limit").FirstOrDefault());
             }
+
             if (response.Headers.Contains("X-RateLimit-Remaining"))
             {
-                Console.WriteLine("Rate Limit Remaining: " + response.Headers.GetValues("X-RateLimit-Remaining").FirstOrDefault());
+                Console.WriteLine("Rate Limit Remaining: " +
+                                  response.Headers.GetValues("X-RateLimit-Remaining").FirstOrDefault());
             }
 
             //var reposString = await response.Content.ReadAsStringAsync();
             //Console.WriteLine($"{reposString}");
-            
+
             var repos = await response.Content.ReadFromJsonAsync<List<GitHubRepo>>();
-            
-            if(repos != null)
+
+            if (repos != null)
             {
                 repositories.AddRange(repos);
             }
@@ -153,43 +145,5 @@ internal class Program
         }
 
         return null;
-    }
-
-
-    public record GitHubRepo
-    {
-        public int Id { get; set; }
-        public string Node_Id { get; set; }
-        public string Name { get; set; }
-        public string FullName { get; set; }
-        public Owner Owner { get; set; }
-        public string Html_Url { get; set; }
-        public string Description { get; set; }
-        public string Url { get; set; }
-        public string Language { get; set; }
-        public License License { get; set; }
-        public DateTime Pushed_At { get; set; }
-        public DateTime Created_At { get; set; }
-        public DateTime Updated_At { get; set; }
-        public List<string> Topics { get; set; }
-    }
-
-    public record Owner
-    {
-        public string Login { get; set; }
-        public int Id { get; set; }
-        public string Node_Id { get; set; }
-        public string Avatar_Url { get; set; }
-        public string Html_Url { get; set; }
-    }
-
-    public record License
-    {
-        public string Key { get; set; }
-        public string Name { get; set; }
-        public string Url { get; set; }
-        public string Spdx_Id { get; set; }
-        public string Node_Id { get; set; }
-        public string Html_Url { get; set; }
     }
 }
