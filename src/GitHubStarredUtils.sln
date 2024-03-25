@@ -7,9 +7,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubStarredRepoExporter",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubStarredCommon", "GitHubStarredCommon\GitHubStarredCommon.csproj", "{FAD1F4D2-632E-439D-8A89-B266BEE86E16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitHubStarredMarkdownGenerator", "GitHubStarredMarkdownGenerator\GitHubStarredMarkdownGenerator.csproj", "{CE114FEB-F8A3-43A9-BA03-2803059BE5E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubStarredMarkdownGenerator", "GitHubStarredMarkdownGenerator\GitHubStarredMarkdownGenerator.csproj", "{CE114FEB-F8A3-43A9-BA03-2803059BE5E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitHubStarredListGenerator", "GitHubStarredListGenerator\GitHubStarredListGenerator.csproj", "{3918849D-F539-4B7B-8958-A2C09306CD8B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubStarredListGenerator", "GitHubStarredListGenerator\GitHubStarredListGenerator.csproj", "{3918849D-F539-4B7B-8958-A2C09306CD8B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A46AB000-792E-4D5E-81D3-B21603618D2B}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
