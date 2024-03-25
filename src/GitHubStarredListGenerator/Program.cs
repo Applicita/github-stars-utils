@@ -53,6 +53,7 @@ namespace GitHubStarredListGenerator
 
         private static async Task CreateLists(List<GitHubRepo> records)
         {
+            // GitHub API currently does not support retrieving lists or managing them
             throw new NotImplementedException();
         }
     }

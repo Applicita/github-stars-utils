@@ -41,15 +41,21 @@ internal class Program
 
         Console.WriteLine($"{records.Count}: Starred GitHub repos imported");
 
-        // Process the records
-        foreach (var record in records)
-        {
-            var lists = record.Lists;
-        }
+        // create a distinct list of record.Lists and for each entry in the list, create a markdown file
 
-        var markdownFileName = Path.ChangeExtension(filePath, ".md");
-        
-        await ExportToMarkdown(records,markdownFileName);
+        var distinctLists = records.SelectMany(record => record.Lists).Distinct().ToList();
+
+        foreach (var list in distinctLists)
+        {
+            var markdownFileName = Path.ChangeExtension(list + ".txt", ".md"); // Using list name for file name
+
+            var reposForThisList = records
+                .Where(record => record.Lists.Contains(list))
+                .ToList();
+
+            // Call the function to export to Markdown
+            await ExportToMarkdown(reposForThisList, markdownFileName);
+        }
 
         Console.WriteLine("Processing complete.");
 
@@ -78,7 +84,7 @@ internal class Program
             markdownBuilder.AppendLine();
         }
 
-        var downloadsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        var downloadsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "GitHubStarredUtils","Markdown");
 
         if (!Directory.Exists(downloadsPath))
         {

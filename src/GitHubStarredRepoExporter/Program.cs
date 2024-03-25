@@ -47,7 +47,7 @@ internal class Program
 
     private static async Task ExportToCsv(List<GitHubRepo> repositories, string fileName)
     {
-        var downloadsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        var downloadsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "GitHubStarredUtils");
 
         if (!Directory.Exists(downloadsPath))
         {
