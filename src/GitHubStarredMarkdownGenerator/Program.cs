@@ -36,7 +36,9 @@ internal class Program
         using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
         {
             csv.Context.RegisterClassMap<GitHubRepoMap>();
-            records = csv.GetRecords<GitHubRepo>().ToList();
+            records = csv.GetRecords<GitHubRepo>()
+                .Select(LowerCaseRepo)
+                .ToList();
         }
 
         Console.WriteLine($"{records.Count}: Starred GitHub repos imported");
@@ -45,12 +47,18 @@ internal class Program
 
         var distinctLists = records.SelectMany(record => record.Lists).Distinct().ToList();
 
+        if(distinctLists.Count == 0)
+        {
+         distinctLists.Add("all");
+        }
+        
         foreach (var list in distinctLists)
         {
             var markdownFileName = Path.ChangeExtension(list + ".txt", ".md"); // Using list name for file name
 
             var reposForThisList = records
-                .Where(record => record.Lists.Contains(list))
+                .Where(record => record.Lists.Contains(list) || list == "all")
+                .OrderBy(record => record.Name)
                 .ToList();
 
             // Call the function to export to Markdown
@@ -98,5 +106,14 @@ internal class Program
         await File.WriteAllTextAsync(markdownFilePath, markdownBuilder.ToString());
         
         Console.WriteLine($"Markdown File was created at {markdownFilePath}");
+    }
+    
+    private static GitHubRepo LowerCaseRepo(GitHubRepo repo)
+    {
+        // Convert all necessary string properties to lower-case
+        repo.Topics = repo.Topics?.Select(t => t.ToLower()).ToList()!;
+        repo.Lists = repo.Lists?.Select(t => t.ToLower()).ToList()!;
+        
+        return repo;
     }
 }
