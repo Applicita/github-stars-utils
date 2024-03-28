@@ -60,7 +60,7 @@ internal class Program
         await using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
         {
             csv.Context.RegisterClassMap<GitHubRepoMap>();
-            await csv.WriteRecordsAsync(repositories.OrderByDescending(repo => repo.Pushed_At));
+            await csv.WriteRecordsAsync(repositories.OrderBy(repo => repo.Name));
         }
 
         Console.WriteLine($"CSV was created at {filePath}");

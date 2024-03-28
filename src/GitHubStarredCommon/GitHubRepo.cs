@@ -6,7 +6,7 @@
         public int Id { get; set; }
         public string Node_Id { get; set; }
         public string Name { get; set; }
-        public string FullName { get; set; }
+        public string Full_Name { get; set; }
         public Owner Owner { get; set; }
         public string Html_Url { get; set; }
         public string Description { get; set; }
